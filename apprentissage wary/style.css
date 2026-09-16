@@ -1,0 +1,54 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #101313;
+  color: #eff2e9;
+  padding: 24px;
+}
+
+form {
+  background-color: #191d1c;
+  padding: 40px;
+  border-radius: 12px;
+  max-width: 400px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #a9b1a8;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #f7030c;
+  color: #101313;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+button:hover {
+  background-color: #f7030c;
+}
+.message-erreur {
+  color: #f7030c;
+  border-left: 4px solid #f7030c;
+  padding-left: 12px;
+}
+
+.message-valide {
+  color: #eff2e9;
+  border-left: 4px solid #eff2e9;
+  padding-left: 12px;
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mon premier écran Stream’int</title>
+  </head>
+
+  <body>
+    <h1>Rejoindre une séance</h1>
+
+    <p>Entrez le code partagé par le diffuseur.</p>
+
+   <form id="formulaire">
+  <label for="code">Code de la séance</label>
+
+  <input
+    id="code"
+    name="code"
+    type="text"
+    placeholder="Exemple : A82K91BC"
+    required
+  >
+
+  <button type="submit">Rejoindre</button>
+</form>
+
+<p id="message" role="status"></p>
+
+<script src="script.js"></script>
+  </body>
+</html>
