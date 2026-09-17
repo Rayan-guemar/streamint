@@ -52,3 +52,19 @@ button:hover {
   border-left: 4px solid #eff2e9;
   padding-left: 12px;
 }
+section {
+  margin-top: 32px;
+}
+
+video {
+  display: block;
+  width: 100%;
+  max-width: 700px;
+  background-color: #000000;
+  border-radius: 12px;
+}
+#bouton-lecture {
+  background-color: #f7030c;
+  color: #ffffff;
+  margin-top: 16px;
+}

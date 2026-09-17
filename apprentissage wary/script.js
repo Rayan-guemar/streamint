@@ -1,30 +1,52 @@
 const formulaire = document.querySelector("#formulaire");
 const champCode = document.querySelector("#code");
 const message = document.querySelector("#message");
-
+function afficherMessage(texte, classeCSS) {
+  message.textContent = texte;
+  message.className = classeCSS;
+}
 formulaire.addEventListener("submit", function (evenement) {
   evenement.preventDefault();
 
   const code = champCode.value.trim().toUpperCase();
   champCode.value = code;
   if (code === "") {
-    message.textContent = "Entre un code de séance.";
-    message.className = "message-erreur";
+    afficherMessage(
+  "Le code doit contenir 8 caractères.",
+  "message-erreur"
+);
     return;
   }
 
   if (code.length !== 8) {
-    message.textContent = "Le code doit contenir 8 caractères.";
+    afficherMessage(
+  "Le code doit contenir 8 caractères.",
+  "message-erreur"
+);
     message.className = "message-erreur";
     return;
   }
 const caracteresAutorises = /^[A-Z0-9]+$/;
 
 if (!caracteresAutorises.test(code)) {
-  message.textContent = "Utilise uniquement des lettres et des chiffres.";
-  message.className = "message-erreur";
-  return;
-}
-  message.textContent = "Code demandé : " + code;
-  message.className = "message-valide";
+  afficherMessage(
+      "Utilise uniquement des lettres et des chiffres.",
+      "message-erreur"
+    );
+    return;
+  }
+
+  afficherMessage(
+    "Format du code valide : " + code,
+    "message-valide"
+  );
+});
+champCode.addEventListener("input", function () {
+  afficherMessage("", "");
+});
+const lecteur = document.querySelector("#lecteur");
+const boutonLecture = document.querySelector("#bouton-lecture");
+
+boutonLecture.addEventListener("click", function () {
+  lecteur.play();
 });
