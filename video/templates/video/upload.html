@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stream'int - Upload</title>
+    <!-- 1. Intégrer la bibliothèque HLS.js pour la compatibilité des navigateurs -->
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+    <h1>Uploader une vidéo</h1>
+
+    <form method="POST" action="{% url 'handle_upload' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="video_file" accept="video/*" required>
+        <button type="submit">Envoyer la vidéo</button>
+    </form>
+
+    <hr>
+
+    <h2>Lecteur Vidéo</h2>
+    <!-- 2. Un lecteur HTML5 classique -->
+    <video id="video" controls width="640" height="360"></video>
+
+    <h2>Vidéos disponibles (Clique pour charger)</h2>
+    <ul>
+        {% for video_name in videos %}
+        <li>
+            <!-- 3. Au lieu d'ouvrir un lien, on charge la source dans le lecteur -->
+            <button onclick="loadVideo('/media/hls/{{ video_name }}/playlist.m3u8')">
+                ▶️ Lire {{ video_name }}
+            </button>
+        </li>
+        {% empty %}
+        <p>Aucune vidéo convertie pour le moment.</p>
+        {% endfor %}
+    </ul>
+
+    <!-- 4. Le script JavaScript pour brancher le flux HLS au lecteur -->
+    <script>
+        function loadVideo(videoSrc) {
+            var video = document.getElementById('video');
+            console.log(videoSrc)
+
+            if (Hls.isSupported()) {
+                var hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Pour Safari qui gère le HLS en natif
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            }
+        }
+    </script>
+</body>
+
+</html>
