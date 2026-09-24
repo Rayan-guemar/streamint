@@ -1,43 +1,107 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <link rel="stylesheet" href="style.css">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mon premier écran Stream’int</title>
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    >
+
+    <title>Stream’int — Apprentissage de Warren</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
   </head>
 
   <body>
-    <h1>Rejoindre une séance</h1>
+    <main>
+      <h1>Stream’int</h1>
 
-    <p>Entrez le code partagé par le diffuseur.</p>
+      <section>
+        <h2>Rejoindre une séance</h2>
+        <p>Entre le code partagé par le diffuseur.</p>
 
-   <form id="formulaire">
-  <label for="code">Code de la séance</label>
+        <form id="formulaire">
+          <label for="code">Code de la séance</label>
 
-  <input
-    id="code"
-    name="code"
-    type="text"
-    placeholder="Exemple : A82K91BC"
-    required
-  >
+          <input
+            id="code"
+            name="code"
+            type="text"
+            placeholder="Exemple : ABCD1234"
+            autocomplete="off"
+            required
+          >
 
-  <button type="submit">Rejoindre</button>
-</form>
+          <button type="submit">Rejoindre</button>
+        </form>
 
-<p id="message" role="status"></p>
-<section>
-  <h2>Ma vidéo de test</h2>
+        <p id="message" role="status"></p>
+      </section>
 
-  <video id="lecteur" controls preload="metadata">
-    <source src="videos/test.mp4" type="video/mp4">
-    Ton navigateur ne prend pas en charge ce lecteur vidéo.
-  </video>
-  <button id="bouton-lecture" type="button">
-  Lire la vidéo
-</button>
-</section>
-<script src="script.js"></script>
+      <section>
+        <h2>Ma vidéo de test</h2>
+
+        <video
+          id="lecteur"
+          controls
+          preload="metadata"
+          playsinline
+        >
+          <source src="videos/test.mp4" type="video/mp4">
+          Ton navigateur ne prend pas en charge la vidéo.
+        </video>
+
+        <p id="etat-video" role="status">
+          Chargement de la vidéo…
+        </p>
+
+        <div class="commandes">
+          <button id="bouton-lecture" type="button" disabled>
+            Lecture
+          </button>
+
+        
+
+          <button id="bouton-reculer" type="button" disabled>
+            −10 secondes
+          </button>
+
+          <button id="bouton-avancer" type="button" disabled>
+            +10 secondes
+          </button>
+        </div>
+
+        <p id="temps-lecture">0:00 / --:--</p>
+
+        <label for="progression">
+          Position dans la vidéo
+        </label>
+
+        <input
+          id="progression"
+          type="range"
+          min="0"
+          max="0"
+          step="0.1"
+          value="0"
+          disabled
+        >
+        <label for="volume">Volume</label>
+
+       <input
+          id="volume"
+         type="range"
+         min="0"
+         max="1"
+         step="0.05"
+         value="1"
+        > 
+        <button id="bouton-muet" type="button">
+         Couper le son
+        </button>
+      </section>
+    </main>
   </body>
 </html>
