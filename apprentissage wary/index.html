@@ -2,13 +2,9 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1"
-    >
-
-    <title>Stream’int — Apprentissage de Warren</title>
+    <title>Stream’int</title>
 
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
@@ -18,30 +14,105 @@
     <main>
       <h1>Stream’int</h1>
 
-      <section>
-        <h2>Rejoindre une séance</h2>
-        <p>Entre le code partagé par le diffuseur.</p>
+      <!-- Formulaire d’entrée dans la salle -->
+      <section id="accueil">
+  <div class="introduction">
+    <p class="surtitre">VOTRE PROCHAINE SÉANCE</p>
+    <h2>Le même film, ensemble.</h2>
+    <p>Prépare ta séance ou découvre la salle de démonstration.</p>
+  </div>
 
-        <form id="formulaire">
-          <label for="code">Code de la séance</label>
+  <div class="cartes-accueil">
+    <!-- Création avec une vidéo locale -->
+    <article class="carte-accueil">
+      <span class="repere">01 — CRÉER</span>
+      <h3>Organise ta séance</h3>
+      <p>Choisis une vidéo et prends les commandes.</p>
 
-          <input
-            id="code"
-            name="code"
-            type="text"
-            placeholder="Exemple : ABCD1234"
-            autocomplete="off"
-            required
-          >
+      <form id="formulaire-creation">
+        <label for="nom-seance">Nom de la séance</label>
 
-          <button type="submit">Rejoindre</button>
-        </form>
+        <input
+          id="nom-seance"
+          type="text"
+          placeholder="Notre soirée cinéma"
+          maxlength="80"
+          required
+        >
 
-        <p id="message" role="status"></p>
-      </section>
+        <label for="fichier-video">Choisir une vidéo</label>
 
-      <section>
-        <h2>Ma vidéo de test</h2>
+        <input
+          id="fichier-video"
+          type="file"
+          accept="video/*"
+          required
+        >
+
+        <button type="submit">Créer ma séance</button>
+      </form>
+
+      <p id="message-creation" role="status"></p>
+    </article>
+
+    <!-- Accès à la démonstration -->
+    <article class="carte-accueil">
+      <span class="repere">02 — REJOINDRE</span>
+      <h3>Entre dans la salle</h3>
+      <p>Saisis le code de démonstration pour essayer le lecteur.</p>
+
+      <form id="formulaire">
+        <label for="code">Code de la séance</label>
+
+        <input
+          id="code"
+          name="code"
+          type="text"
+          placeholder="DEMO2026"
+          autocomplete="off"
+          required
+        >
+
+        <button class="bouton-secondaire" type="submit">
+          Rejoindre
+        </button>
+      </form>
+
+      <p id="message" role="status"></p>
+
+      <p class="information">
+        Code de démonstration : <strong>DEMO2026</strong>
+      </p>
+    </article>
+  </div>
+
+  <p class="information">
+    Maquette locale : les vidéos restent sur cet ordinateur.
+    Le partage et la synchronisation seront reliés au serveur.
+  </p>
+</section>
+      
+
+      <!-- La salle reste masquée avant la validation du code -->
+      <section id="salle" hidden>
+        <h2 id="titre-salle">Salle de visionnage</h2>
+
+        <div class="invitation">
+  <div>
+    <p>Code de démonstration</p>
+    <strong id="code-affiche"></strong>
+  </div>
+
+  <button id="bouton-copier" type="button">
+    Copier le code
+  </button>
+</div>
+
+<p id="message-copie" role="status"></p>
+
+        <button id="bouton-quitter" type="button">
+          Retour à l’accueil
+        </button>
 
         <video
           id="lecteur"
@@ -52,17 +123,19 @@
           <source src="videos/test.mp4" type="video/mp4">
           Ton navigateur ne prend pas en charge la vidéo.
         </video>
+        <button id="bouton-plein-ecran" type="button">
+  Plein écran
+</button>
 
         <p id="etat-video" role="status">
           Chargement de la vidéo…
         </p>
 
+        <!-- Commandes du lecteur -->
         <div class="commandes">
           <button id="bouton-lecture" type="button" disabled>
             Lecture
           </button>
-
-        
 
           <button id="bouton-reculer" type="button" disabled>
             −10 secondes
@@ -75,9 +148,7 @@
 
         <p id="temps-lecture">0:00 / --:--</p>
 
-        <label for="progression">
-          Position dans la vidéo
-        </label>
+        <label for="progression">Position dans la vidéo</label>
 
         <input
           id="progression"
@@ -88,18 +159,20 @@
           value="0"
           disabled
         >
+
         <label for="volume">Volume</label>
 
-       <input
+        <input
           id="volume"
-         type="range"
-         min="0"
-         max="1"
-         step="0.05"
-         value="1"
-        > 
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value="1"
+        >
+
         <button id="bouton-muet" type="button">
-         Couper le son
+          Couper le son
         </button>
       </section>
     </main>

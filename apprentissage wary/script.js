@@ -5,7 +5,10 @@
 const formulaire = document.querySelector("#formulaire");
 const champCode = document.querySelector("#code");
 const message = document.querySelector("#message");
-
+const accueil = document.querySelector("#accueil");
+const salle = document.querySelector("#salle");
+const codeAffiche = document.querySelector("#code-affiche");
+const boutonQuitter = document.querySelector("#bouton-quitter");
 
 // ========================================
 // 2. Afficher un message
@@ -54,11 +57,23 @@ formulaire.addEventListener("submit", function (evenement) {
     return;
   }
 
+if (code !== "DEMO2026") {
   afficherMessage(
-    "Format du code valide : " + code,
-    "message-valide"
+    "Pour cette démonstration, utilise le code DEMO2026.",
+    "message-erreur"
   );
+  return;
+}
+
+codeAffiche.textContent = code;
+
+accueil.hidden = true;
+salle.hidden = false;
+
+afficherMessage("", "");
 });
+
+// Effacer le résultat précédent quand la saisie change.
 
 
 // Effacer le résultat précédent quand la saisie change.
@@ -326,3 +341,96 @@ lecteur.addEventListener("pause", actualiserBoutonLecture);
 lecteur.addEventListener("ended", actualiserBoutonLecture);
 
 actualiserBoutonLecture();
+boutonQuitter.addEventListener("click", function () {
+  lecteur.pause();
+
+  salle.hidden = true;
+  accueil.hidden = false;
+
+  champCode.focus();
+});
+const formulaireCreation =
+  document.querySelector("#formulaire-creation");
+
+const nomSeance = document.querySelector("#nom-seance");
+const fichierVideo = document.querySelector("#fichier-video");
+const titreSalle = document.querySelector("#titre-salle");
+const messageCreation = document.querySelector("#message-creation");
+
+let adresseVideoLocale = null;
+
+formulaireCreation.addEventListener("submit", function (evenement) {
+  evenement.preventDefault();
+
+  const nom = nomSeance.value.trim();
+  const fichier = fichierVideo.files[0];
+
+  if (nom === "") {
+    messageCreation.textContent = "Donne un nom à ta séance.";
+    return;
+  }
+
+  if (!fichier) {
+    messageCreation.textContent = "Choisis une vidéo.";
+    return;
+  }
+
+  lecteur.pause();
+
+  // Libérer l’adresse de la vidéo précédente.
+  if (adresseVideoLocale !== null) {
+    URL.revokeObjectURL(adresseVideoLocale);
+  }
+
+  adresseVideoLocale = URL.createObjectURL(fichier);
+
+  // Charger le fichier choisi dans notre lecteur existant.
+  sourceVideo.src = adresseVideoLocale;
+  sourceVideo.type = fichier.type;
+  lecteur.load();
+
+  titreSalle.textContent = nom;
+  codeAffiche.textContent = "DEMO2026";
+  messageCreation.textContent = "";
+
+  accueil.hidden = true;
+  salle.hidden = false;
+  boutonQuitter.focus();
+});
+const boutonCopier = document.querySelector("#bouton-copier");
+const messageCopie = document.querySelector("#message-copie");
+
+const boutonPleinEcran =
+  document.querySelector("#bouton-plein-ecran");
+
+boutonCopier.addEventListener("click", function () {
+  const code = codeAffiche.textContent;
+
+  // Le presse-papiers peut être inaccessible selon le navigateur.
+  if (!navigator.clipboard) {
+    messageCopie.textContent = "Code à copier manuellement : " + code;
+    return;
+  }
+
+  navigator.clipboard.writeText(code)
+    .then(function () {
+      messageCopie.textContent = "Code copié.";
+    })
+    .catch(function () {
+      messageCopie.textContent =
+        "Copie automatique impossible. Code à copier : " + code;
+    });
+});
+
+boutonPleinEcran.addEventListener("click", function () {
+  if (!lecteur.requestFullscreen) {
+    etatVideo.textContent =
+      "Le plein écran n’est pas disponible dans ce navigateur.";
+    return;
+  }
+
+  lecteur.requestFullscreen().catch(function () {
+    etatVideo.textContent =
+      "Le navigateur n’a pas autorisé le plein écran.";
+  });
+});
