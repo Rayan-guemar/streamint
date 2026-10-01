@@ -38,7 +38,7 @@ def handle_upload_view(request):
 
         thread = threading.Thread(
             target=process_video_with_ffmpeg, 
-            args=(video_file.name)
+            args=(video_file.name,)
         )
 
         thread.daemon = True
