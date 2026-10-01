@@ -1,6 +1,5 @@
-// ========================================
-// 1. Récupérer les éléments du formulaire
-// ========================================
+
+// 1 Recuperer les elements du formulaire
 
 const formulaire = document.querySelector("#formulaire");
 const champCode = document.querySelector("#code");
@@ -10,19 +9,14 @@ const salle = document.querySelector("#salle");
 const codeAffiche = document.querySelector("#code-affiche");
 const boutonQuitter = document.querySelector("#bouton-quitter");
 
-// ========================================
-// 2. Afficher un message
-// ========================================
+// 2 Afficher un message
 
 function afficherMessage(texte, classeCSS) {
   message.textContent = texte;
   message.className = classeCSS;
 }
 
-
-// ========================================
-// 3. Vérifier le code de séance
-// ========================================
+// 3 Verifier le code de seance
 
 formulaire.addEventListener("submit", function (evenement) {
   evenement.preventDefault();
@@ -66,32 +60,30 @@ if (code !== "DEMO2026") {
 }
 
 codeAffiche.textContent = code;
+titreSalle.textContent = "Séance de démonstration";
+
+afficherParticipants([
+  { nom: "Marine", organisateur: true },
+  { nom: "Warren", organisateur: false },
+  { nom: "Rayan", organisateur: false }
+]);
 
 accueil.hidden = true;
 salle.hidden = false;
 
 afficherMessage("", "");
 });
-
-// Effacer le résultat précédent quand la saisie change.
-
-
-// Effacer le résultat précédent quand la saisie change.
-
+// Effacer le resultat precedent quand la saisie change
 champCode.addEventListener("input", function () {
   afficherMessage("", "");
 });
 
-
-// ========================================
-// 4. Récupérer les éléments du lecteur
-// ========================================
+// 4 Recuperer les elements du lecteur
 
 const lecteur = document.querySelector("#lecteur");
 
 const boutonLecture =
   document.querySelector("#bouton-lecture");
-
 
 const boutonReculer =
   document.querySelector("#bouton-reculer");
@@ -108,10 +100,7 @@ const progression =
 const etatVideo =
   document.querySelector("#etat-video");
 
-
-// ========================================
-// 5. Vérifier si la vidéo est prête
-// ========================================
+// 5 Verifier si la video est prete
 
 function videoEstPrete() {
   return (
@@ -122,10 +111,7 @@ function videoEstPrete() {
   );
 }
 
-
-// ========================================
-// 6. Transformer les secondes en minutes
-// ========================================
+// 6 Transformer les secondes en minutes
 
 function formaterTemps(temps) {
   if (!Number.isFinite(temps) || temps < 0) {
@@ -141,10 +127,7 @@ function formaterTemps(temps) {
   return minutes + ":" + secondesFormatees;
 }
 
-
-// ========================================
-// 7. Actualiser le temps et le curseur
-// ========================================
+// 7 Actualiser le temps et le curseur
 
 function actualiserTemps() {
   const position = formaterTemps(lecteur.currentTime);
@@ -164,10 +147,7 @@ function actualiserTemps() {
   progression.value = lecteur.currentTime;
 }
 
-
-// ========================================
-// 8. Activer ou désactiver les commandes
-// ========================================
+// 8 Activer ou desactiver les commandes
 
 function actualiserDisponibilite() {
   const prete = videoEstPrete();
@@ -189,10 +169,7 @@ function actualiserDisponibilite() {
   actualiserTemps();
 }
 
-
-// ========================================
-// 9. Lecture et pause
-// ========================================
+// 9 Lecture et pause
 
 boutonLecture.addEventListener("click", function () {
   if (!videoEstPrete()) {
@@ -213,10 +190,7 @@ boutonLecture.addEventListener("click", function () {
   }
 });
 
-
-// ========================================
-// 10. Avancer et reculer
-// ========================================
+// 10 Avancer et reculer
 
 boutonAvancer.addEventListener("click", function () {
   if (!videoEstPrete()) {
@@ -245,10 +219,7 @@ boutonReculer.addEventListener("click", function () {
   actualiserTemps();
 });
 
-
-// ========================================
-// 11. Déplacer la vidéo avec le curseur
-// ========================================
+// 11 Deplacer la video avec le curseur
 
 progression.addEventListener("input", function () {
   if (!videoEstPrete()) {
@@ -260,10 +231,7 @@ progression.addEventListener("input", function () {
   actualiserTemps();
 });
 
-
-// ========================================
-// 12. Suivre les événements du lecteur
-// ========================================
+// 12 Suivre les evenements du lecteur
 
 lecteur.addEventListener("timeupdate", actualiserTemps);
 
@@ -286,8 +254,7 @@ lecteur.addEventListener(
   "error",
   actualiserDisponibilite
 );
-
-// Certains échecs de chargement concernent l’élément source.
+// Certains echecs de chargement concernent lelement source
 const sourceVideo = lecteur.querySelector("source");
 
 sourceVideo.addEventListener("error", function () {
@@ -300,10 +267,7 @@ sourceVideo.addEventListener("error", function () {
     "Fichier vidéo introuvable ou illisible : vérifie videos/test.mp4.";
 });
 
-
-// ========================================
-// 13. Initialiser l’affichage
-// ========================================
+// 13 Initialiser laffichage
 
 actualiserDisponibilite();
 const volume = document.querySelector("#volume");
@@ -376,20 +340,23 @@ formulaireCreation.addEventListener("submit", function (evenement) {
   }
 
   lecteur.pause();
-
-  // Libérer l’adresse de la vidéo précédente.
+// Liberer ladresse de la video precedente
   if (adresseVideoLocale !== null) {
     URL.revokeObjectURL(adresseVideoLocale);
   }
 
   adresseVideoLocale = URL.createObjectURL(fichier);
-
-  // Charger le fichier choisi dans notre lecteur existant.
+// Charger le fichier choisi dans notre lecteur existant
   sourceVideo.src = adresseVideoLocale;
   sourceVideo.type = fichier.type;
   lecteur.load();
 
   titreSalle.textContent = nom;
+  afficherParticipants([
+  { nom: "Warren", organisateur: true },
+  { nom: "Marine", organisateur: false },
+  { nom: "Rayan", organisateur: false }
+]);
   codeAffiche.textContent = "DEMO2026";
   messageCreation.textContent = "";
 
@@ -405,8 +372,7 @@ const boutonPleinEcran =
 
 boutonCopier.addEventListener("click", function () {
   const code = codeAffiche.textContent;
-
-  // Le presse-papiers peut être inaccessible selon le navigateur.
+// Le pressepapiers peut etre inaccessible selon le navigateur
   if (!navigator.clipboard) {
     messageCopie.textContent = "Code à copier manuellement : " + code;
     return;
@@ -434,3 +400,31 @@ boutonPleinEcran.addEventListener("click", function () {
       "Le navigateur n’a pas autorisé le plein écran.";
   });
 });
+// Participants
+const listeParticipants = document.querySelector("#liste-participants");
+const nombreParticipants = document.querySelector("#nombre-participants");
+
+function afficherParticipants(participants) {
+  listeParticipants.replaceChildren();
+
+  nombreParticipants.textContent =
+    participants.length + " participant(s)";
+
+  participants.forEach(function (participant) {
+    const ligne = document.createElement("li");
+    const nom = document.createElement("span");
+    const role = document.createElement("span");
+
+    nom.textContent = participant.nom;
+    role.className = "role-participant";
+
+    if (participant.organisateur) {
+      role.textContent = "Organisateur";
+    } else {
+      role.textContent = "Invité";
+    }
+
+    ligne.append(nom, role);
+    listeParticipants.append(ligne);
+  });
+}

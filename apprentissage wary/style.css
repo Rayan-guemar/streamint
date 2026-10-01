@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-/* Garantit que les écrans masqués ne s’affichent pas. */
+/* Garantit que les ecrans masques ne saffichent pas */
 [hidden] {
   display: none !important;
 }
@@ -17,7 +17,7 @@ body {
 }
 
 main {
-  max-width: 800px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -71,7 +71,7 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Rend la navigation au clavier visible. */
+/* Rend la navigation au clavier visible */
 button:focus-visible,
 input:focus-visible {
   outline: 2px solid #ffffff;
@@ -144,20 +144,6 @@ video {
   accent-color: #f7030c;
 }
 
-/* Les boutons reviennent à la ligne sur petit écran. */
-@media (max-width: 480px) {
-  body {
-    padding: 12px;
-  }
-
-  section {
-    padding: 16px;
-  }
-
-  .commandes button {
-    flex: 1 1 140px;
-  }
-}
 #formulaire-creation {
   margin-bottom: 24px;
 }
@@ -213,9 +199,6 @@ input[type="file"] {
   border: 1px solid #f7030c;
 }
 /* Accueil en deux colonnes */
-main {
-  max-width: 1100px;
-}
 
 #accueil {
   padding: 0;
@@ -295,13 +278,140 @@ main {
   display: none;
 }
 
-/* Une seule colonne sur les écrans étroits */
+
+/* Tailles et debordements */
+html {
+  font-size: 16px;
+}
+
+body {
+  font-size: 1rem;
+}
+
+button,
+input[type="text"],
+input[type="file"] {
+  font: inherit;
+  min-width: 0;
+  max-width: 100%;
+}
+
+button {
+  min-height: 44px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+video {
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+/* Petits ecrans */
 @media (max-width: 700px) {
-  .cartes-accueil {
-    grid-template-columns: 1fr;
+  body {
+    padding: 12px;
   }
 
+  section,
   .carte-accueil {
-    padding: 20px;
+    padding: 16px;
   }
+
+  .cartes-accueil {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  button {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .commandes {
+    flex-direction: column;
+  }
+
+  .commandes button {
+    flex: none;
+  }
+}
+
+/* Grandes fenetres */
+@media (min-width: 1900px) {
+  html {
+    font-size: 22px;
+  }
+
+  main {
+    max-width: 1500px;
+  }
+
+  .cartes-accueil {
+    gap: 40px;
+  }
+
+  .carte-accueil,
+  section {
+    padding: 32px;
+  }
+
+  .introduction h2 {
+    font-size: 2.5rem;
+  }
+
+  .carte-accueil h3 {
+    font-size: 1.5rem;
+  }
+
+  .information,
+  .repere,
+  .surtitre {
+    font-size: 0.85rem;
+  }
+
+  #code-affiche {
+    font-size: 1.4rem;
+  }
+
+  button:focus-visible,
+  input:focus-visible {
+    outline-width: 4px;
+  }
+}
+/* Participants */
+.participants {
+  margin: 20px 0;
+  padding: 16px;
+  background-color: #101313;
+  border: 1px solid #343a35;
+  border-radius: 8px;
+}
+
+.participants h3 {
+  margin: 0 0 8px;
+}
+
+#liste-participants {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#liste-participants li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid #343a35;
+}
+
+.role-participant {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background-color: #342024;
+  color: #ff858a;
+  font-size: 0.875rem;
 }

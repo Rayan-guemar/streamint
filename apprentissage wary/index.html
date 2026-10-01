@@ -14,7 +14,7 @@
     <main>
       <h1>Stream’int</h1>
 
-      <!-- Formulaire d’entrée dans la salle -->
+      <!-- Formulaire dentree dans la salle -->
       <section id="accueil">
   <div class="introduction">
     <p class="surtitre">VOTRE PROCHAINE SÉANCE</p>
@@ -23,9 +23,9 @@
   </div>
 
   <div class="cartes-accueil">
-    <!-- Création avec une vidéo locale -->
+    <!-- Creation avec une video locale -->
     <article class="carte-accueil">
-      <span class="repere">01 — CRÉER</span>
+      <span class="repere">01 - CRÉER</span>
       <h3>Organise ta séance</h3>
       <p>Choisis une vidéo et prends les commandes.</p>
 
@@ -55,9 +55,9 @@
       <p id="message-creation" role="status"></p>
     </article>
 
-    <!-- Accès à la démonstration -->
+    <!-- Acces a la demonstration -->
     <article class="carte-accueil">
-      <span class="repere">02 — REJOINDRE</span>
+      <span class="repere">02 - REJOINDRE</span>
       <h3>Entre dans la salle</h3>
       <p>Saisis le code de démonstration pour essayer le lecteur.</p>
 
@@ -93,7 +93,7 @@
 </section>
       
 
-      <!-- La salle reste masquée avant la validation du code -->
+      <!-- La salle reste masquee avant la validation du code -->
       <section id="salle" hidden>
         <h2 id="titre-salle">Salle de visionnage</h2>
 
@@ -109,6 +109,18 @@
 </div>
 
 <p id="message-copie" role="status"></p>
+<!-- Participants -->
+<aside class="participants" aria-labelledby="titre-participants">
+  <h3 id="titre-participants">Participants</h3>
+
+  <p id="nombre-participants" role="status"></p>
+
+  <ul id="liste-participants"></ul>
+
+  <p class="information">
+    Participants fictifs pour la démonstration.
+  </p>
+</aside>
 
         <button id="bouton-quitter" type="button">
           Retour à l’accueil
