@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'appstreamint',
 ]
 
 MIDDLEWARE = [
@@ -125,3 +126,9 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+
+
+# Puisqu'on a créé notre propre User(AbstractBaseUser) dans models.py
+
+AUTH_USER_MODEL = 'appstreamint.User'
