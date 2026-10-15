@@ -8,6 +8,8 @@ from typing import cast
 
 from video.services import ensure_directory_exists, get_hls_dir, save_uploaded_video, process_video_with_ffmpeg
 
+from appstreamint.models import Video
+
 #tmp
 def get_all_video_folders() -> list[str]:
     hls_dir = get_hls_dir()
@@ -19,7 +21,7 @@ def get_all_video_folders() -> list[str]:
 
 def upload_form_view(request):
 
-    videos = get_all_video_folders
+    videos = Video.objects.all()
     context = {
         'videos': videos
     }
@@ -34,11 +36,11 @@ def handle_upload_view(request):
     video_file = cast(File, request.FILES.get('video_file'))
     
     if video_file:
-        save_uploaded_video(video_file)
+        video = save_uploaded_video(video_file)
 
         thread = threading.Thread(
             target=process_video_with_ffmpeg, 
-            args=(video_file.name,)
+            args=(video, video_file.name)
         )
 
         thread.daemon = True

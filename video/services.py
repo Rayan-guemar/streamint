@@ -4,6 +4,8 @@ import subprocess
 from django.conf import settings
 from django.core.files import File
 
+from appstreamint.models import Video, User
+
 
 def get_hls_dir() -> str:
     return os.path.join(settings.MEDIA_ROOT, 'hls')
@@ -52,17 +54,26 @@ def execute_ffmpeg_command(command: list) -> None:
         )
 
 
-def save_uploaded_video(file: File) -> str:
+def save_uploaded_video(file: File) -> Video:
     name = file.name
     dir_path = get_original_dir()
     ensure_directory_exists(dir_path)
     file_path = get_original_path(name)
     write_file_chunks(file_path, file)
-    return file_path
+    owner = User.objects.first()
+    if owner is None:
+        owner = User(username='test', email='test@gmail.com')
+        owner.save()
 
+    new_video = Video(title=get_clean_name(name), status=Video.Status.UPLOADED)
+   
+    new_video.owner = owner
+    new_video.save()
+    return new_video
 
-def process_video_with_ffmpeg(name: str) -> str | None:
+def process_video_with_ffmpeg(video:Video, filename:str) -> str | None:
     print("Processing video to multi-resolution HLS...")
+    name = filename
     clean_name = get_clean_name(name)
     
     original_file_path = get_original_path(name)
@@ -76,48 +87,63 @@ def process_video_with_ffmpeg(name: str) -> str | None:
         "ffmpeg",
         "-y",
         "-i", original_file_path,
-        
-        # Si la vidéo n'a pas d'audio, on génère une piste audio silencieuse de secours
-        "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
-        
-        # 1. Filtre complexe : [0:v] pour la vidéo de l'input 0, split en 2
-        "-filter_complex", "[0:v]split=2[v1][v2]; [v1]scale=1280:-2[out1]; [v2]scale=854:-2[out2]",
-        
-        # --- Flux Vidéo 0 (720p) ---
-        "-map", "[out1]",
+        "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
+        "-filter_complex",
+        "[0:v]fps=30,scale=w=1920:h=1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2[v1]; [0:v]fps=30,scale=w=1280:h=720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2[v2]; [0:v]fps=30,scale=w=854:h=480:force_original_aspect_ratio=decrease,pad=854:480:(ow-iw)/2:(oh-ih)/2[v3]",
+        "-map", "[v1]",
         "-c:v:0", "libx264",
-        "-b:v:0", "2500k",
-        "-preset", "fast",
-        
-        # --- Flux Vidéo 1 (480p) ---
-        "-map", "[out2]",
+        "-b:v:0", "4M",
+        "-maxrate:v:0", "4.2M",
+        "-bufsize:v:0", "6M",
+        "-preset", "medium",
+        "-g", "60",
+        "-keyint_min", "60",
+        "-sc_threshold", "0",
+        "-map", "[v2]",
         "-c:v:1", "libx264",
-        "-b:v:1", "1000k",
-        "-preset", "fast",
-        
-        # --- Flux Audio : On prend l'audio de la source (0:a) s'il existe, sinon l'input 1 (silence) ---
-        # L'utilisation de '?' évite le crash si 0:a n'existe pas
-        "-map", "0:a?", 
+        "-b:v:1", "2M",
+        "-maxrate:v:1", "2.1M",
+        "-bufsize:v:1", "3M",
+        "-preset", "medium",
+        "-g", "60",
+        "-keyint_min", "60",
+        "-sc_threshold", "0",
+        "-map", "[v3]",
+        "-c:v:2", "libx264",
+        "-b:v:2", "800k",
+        "-maxrate:v:2", "850k",
+        "-bufsize:v:2", "1.2M",
+        "-preset", "medium",
+        "-g", "60",
+        "-keyint_min", "60",
+        "-sc_threshold", "0",
         "-map", "1:a",
-        "-c:a", "aac",
-        "-b:a", "128k",
-        
-        # --- Paramètres HLS & Master ---
+        "-c:a:0", "aac",
+        "-b:a:0", "128k",
+        "-map", "1:a",
+        "-c:a:1", "aac",
+        "-b:a:1", "128k",
+        "-map", "1:a",
+        "-c:a:2", "aac",
+        "-b:a:2", "96k",
+        "-shortest",
         "-f", "hls",
-        "-hls_time", "6",
-        "-hls_list_size", "0",
-        
+        "-hls_time", "4",
+        "-hls_playlist_type", "vod",
+        "-hls_flags", "independent_segments",
+        "-hls_segment_type", "mpegts",
+        "-hls_segment_filename", os.path.join(video_hls_dir, "stream_%v_%d.ts"),
         "-master_pl_name", "master.m3u8",
-        "-var_stream_map", "v:0,a:0 v:1,a:0", # On associe les deux flux vidéo au flux audio disponible
-        
-        "-hls_segment_filename", os.path.join(video_hls_dir, "stream_%v_%03d.ts"),
+        "-var_stream_map", "v:0,a:0 v:1,a:1 v:2,a:2",
         os.path.join(video_hls_dir, "stream_%v.m3u8")
     ]
-    
+
     try:
+        video.status = Video.Status.PROCESSING
         execute_ffmpeg_command(command)
         print("\nVIDEO SUCCESSFULLY PROCESSED TO MULTI-RESOLUTION HLS\n")
-        # On retourne le chemin relatif du master pour le stocker en base de données
+        video.status = Video.Status.READY
+        video.save()
         return f"hls/{clean_name}/master.m3u8"
         
     except subprocess.CalledProcessError as e:

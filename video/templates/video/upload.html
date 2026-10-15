@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Stream'int - Upload</title>
-    <!-- 1. Intégrer la bibliothèque HLS.js pour la compatibilité des navigateurs -->
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
@@ -21,16 +20,14 @@
     <hr>
 
     <h2>Lecteur Vidéo</h2>
-    <!-- 2. Un lecteur HTML5 classique -->
     <video id="video" controls width="640" height="360"></video>
 
     <h2>Vidéos disponibles (Clique pour charger)</h2>
     <ul>
-        {% for video_name in videos %}
+        {% for video in videos %}
         <li>
-            <!-- 3. Au lieu d'ouvrir un lien, on charge la source dans le lecteur -->
-            <button onclick="loadVideo('/media/hls/{{ video_name }}/playlist.m3u8')">
-                ▶️ Lire {{ video_name }}
+            <button onclick="loadVideo('/media/hls/{{ video.title}}/master.m3u8')">
+                ▶️ Lire {{ video.title }}, Status: {{ video.status }}
             </button>
         </li>
         {% empty %}
@@ -38,7 +35,6 @@
         {% endfor %}
     </ul>
 
-    <!-- 4. Le script JavaScript pour brancher le flux HLS au lecteur -->
     <script>
         function loadVideo(videoSrc) {
             var video = document.getElementById('video');
@@ -48,14 +44,15 @@
                 var hls = new Hls();
                 hls.loadSource(videoSrc);
                 hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function () {
-                    console.log("test")
+                hls.on(Hls.Events.MANIFEST_PARSED, function (e, d) {
+                    console.log("testa")
+                    console.log("Manifest chargé avec succès ! Qualités dispo : ", d.levels);
                     video.play();
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // Pour Safari qui gère le HLS en natif
                 video.src = videoSrc;
-                video.addEventListener('loadedmetadata', function () {
+                video.addEventListener('loadedmetadata', function (e, d) {
+                    console.log("Manifest chargé avec succès ! Qualités dispo : ", d.levels);
                     console.log("test2")
                     video.play();
                 });
