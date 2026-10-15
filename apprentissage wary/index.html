@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Stream’int</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+  </head>
+
+  <body>
+    <main>
+      <h1>Stream’int</h1>
+
+      <!-- Formulaire dentree dans la salle -->
+      <section id="accueil">
+  <div class="introduction">
+    <p class="surtitre">VOTRE PROCHAINE SÉANCE</p>
+    <h2>Le même film, ensemble.</h2>
+    <p>Prépare ta séance ou découvre la salle de démonstration.</p>
+  </div>
+
+  <div class="cartes-accueil">
+    <!-- Creation avec une video locale -->
+    <article class="carte-accueil">
+      <span class="repere">01 - CRÉER</span>
+      <h3>Organise ta séance</h3>
+      <p>Choisis une vidéo et prends les commandes.</p>
+
+      <form id="formulaire-creation">
+        <label for="nom-seance">Nom de la séance</label>
+
+        <input
+          id="nom-seance"
+          type="text"
+          placeholder="Notre soirée cinéma"
+          maxlength="80"
+          required
+        >
+
+        <label for="fichier-video">Choisir une vidéo</label>
+
+        <input
+          id="fichier-video"
+          type="file"
+          accept="video/*"
+          required
+        >
+
+        <button type="submit">Créer ma séance</button>
+      </form>
+
+      <p id="message-creation" role="status"></p>
+    </article>
+
+    <!-- Acces a la demonstration -->
+    <article class="carte-accueil">
+      <span class="repere">02 - REJOINDRE</span>
+      <h3>Entre dans la salle</h3>
+      <p>Saisis le code de démonstration pour essayer le lecteur.</p>
+
+      <form id="formulaire">
+        <label for="code">Code de la séance</label>
+
+        <input
+          id="code"
+          name="code"
+          type="text"
+          placeholder="DEMO2026"
+          autocomplete="off"
+          required
+        >
+
+        <button class="bouton-secondaire" type="submit">
+          Rejoindre
+        </button>
+      </form>
+
+      <p id="message" role="status"></p>
+
+      <p class="information">
+        Code de démonstration : <strong>DEMO2026</strong>
+      </p>
+    </article>
+  </div>
+
+  <p class="information">
+    Maquette locale : les vidéos restent sur cet ordinateur.
+    Le partage et la synchronisation seront reliés au serveur.
+  </p>
+</section>
+      
+
+      <!-- La salle reste masquee avant la validation du code -->
+      <section id="salle" hidden>
+        <h2 id="titre-salle">Salle de visionnage</h2>
+
+        <div class="invitation">
+  <div>
+    <p>Code de démonstration</p>
+    <strong id="code-affiche"></strong>
+  </div>
+
+  <button id="bouton-copier" type="button">
+    Copier le code
+  </button>
+</div>
+
+<p id="message-copie" role="status"></p>
+<!-- Participants -->
+<aside class="participants" aria-labelledby="titre-participants">
+  <h3 id="titre-participants">Participants</h3>
+
+  <p id="nombre-participants" role="status"></p>
+
+  <ul id="liste-participants"></ul>
+
+  <p class="information">
+    Participants fictifs pour la démonstration.
+  </p>
+</aside>
+
+        <button id="bouton-quitter" type="button">
+          Retour à l’accueil
+        </button>
+
+        <video
+          id="lecteur"
+          controls
+          preload="metadata"
+          playsinline
+        >
+          <source src="videos/test.mp4" type="video/mp4">
+          Ton navigateur ne prend pas en charge la vidéo.
+        </video>
+        <button id="bouton-plein-ecran" type="button">
+  Plein écran
+</button>
+
+        <p id="etat-video" role="status">
+          Chargement de la vidéo…
+        </p>
+
+        <!-- Commandes du lecteur -->
+        <div class="commandes">
+          <button id="bouton-lecture" type="button" disabled>
+            Lecture
+          </button>
+
+          <button id="bouton-reculer" type="button" disabled>
+            −10 secondes
+          </button>
+
+          <button id="bouton-avancer" type="button" disabled>
+            +10 secondes
+          </button>
+        </div>
+
+        <p id="temps-lecture">0:00 / --:--</p>
+
+        <label for="progression">Position dans la vidéo</label>
+
+        <input
+          id="progression"
+          type="range"
+          min="0"
+          max="0"
+          step="0.1"
+          value="0"
+          disabled
+        >
+
+        <label for="volume">Volume</label>
+
+        <input
+          id="volume"
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value="1"
+        >
+
+        <button id="bouton-muet" type="button">
+          Couper le son
+        </button>
+      </section>
+    </main>
+  </body>
+</html>
