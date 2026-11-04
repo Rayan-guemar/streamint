@@ -23,7 +23,8 @@ from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('video/', include('video.urls'))
+    path('videos/', include('videos.urls')),
+    path('', include('rooms.urls')),      
     # path('', upload_form_view),
     # path('upload', handle_upload_view)
 ]
