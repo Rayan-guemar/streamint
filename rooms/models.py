@@ -1,45 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser
+from users.models import User
+from videos.models import Video
 
-
-class User(AbstractBaseUser):
-    email = models.EmailField(unique=True, null=False, blank=False)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    username = models.CharField(
-        unique=True,
-        max_length=30,
-        null=False,
-        blank=False
-    )
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
-
-class Video(models.Model):
-
-    class Status(models.TextChoices):
-        UPLOADED = 'Uploaded'
-        PROCESSING = 'Processing'
-        READY = 'Ready'
-        ERROR = 'Error'
-
-    owner = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='videos'
-    )
-
-    title = models.CharField(max_length=255)
-    file = models.FileField(upload_to='videos/')
-
-    status = models.CharField(
-        max_length=20,
-        choices=Status.choices,
-        default=Status.UPLOADED
-    )
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
+# Create your models here.
 
 class StreamSession(models.Model):
     host = models.ForeignKey(
