@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Stream’int</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/script.js' %}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+    <main>
+        <h1>Stream’int</h1>
+
+
+        <section id="salle">
+            <h2 id="titre-salle">Salle de visionnage</h2>
+
+            <div class="invitation">
+                <div>
+                    <p>Code de démonstration</p>
+                    <strong id="code-affiche">{{session.code}}</strong>
+                </div>
+
+                <button id="bouton-copier" type="button">
+                    Copier le code
+                </button>
+            </div>
+
+            <p id="message-copie" role="status"></p>
+            <aside class="participants" aria-labelledby="titre-participants">
+                <h3 id="titre-participants">Participants</h3>
+
+                <p id="nombre-participants" role="status"></p>
+
+                <ul id="liste-participants"></ul>
+
+                <p class="information">
+                    Participants fictifs pour la démonstration.
+                </p>
+            </aside>
+
+            <button id="bouton-quitter" type="button">
+                Retour à l’accueil
+            </button>
+
+            <video id="lecteur" preload="metadata" playsinline>
+                <source src="/media/hls/{{ video.title }}/master.m3u8" type="video/mp4">
+                Ton navigateur ne prend pas en charge la vidéo.
+            </video>
+            <button id="bouton-plein-ecran" type="button">
+                Plein écran
+            </button>
+
+            <p id="etat-video" role="status">
+                Chargement de la vidéo…
+            </p>
+
+            <div class="commandes">
+                <button id="bouton-lecture" type="button" disabled>
+                    Lecture
+                </button>
+
+                <button id="bouton-reculer" type="button" disabled>
+                    -10 secondes
+                </button>
+
+                <button id="bouton-avancer" type="button" disabled>
+                    +10 secondes
+                </button>
+            </div>
+
+            <p id="temps-lecture">0:00 / --:--</p>
+
+            <label for="progression">Position dans la vidéo</label>
+
+            <input id="progression" type="range" min="0" max="0" step="0.1" value="0" disabled>
+
+            <label for="volume">Volume</label>
+
+            <input id="volume" type="range" min="0" max="1" step="0.05" value="1">
+
+            <button id="bouton-muet" type="button">
+                Couper le son
+            </button>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const video = document.getElementById('lecteur');
+            const videoSrc = '/media/hls/{{ video.title }}/master.m3u8';
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    if (typeof actualiserDisponibilite === "function") {
+                        actualiserDisponibilite();
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                // Pour Safari
+                video.src = videoSrc;
+            }
+        });
+    </script>
+</body>
+
+</html>
