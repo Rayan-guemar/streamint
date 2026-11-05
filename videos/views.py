@@ -1,14 +1,18 @@
 import os
 import threading
+import secrets
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.files import File
 from typing import cast
 
+from users.models import User
 from videos.services import ensure_directory_exists, get_hls_dir, save_uploaded_video, process_video_with_ffmpeg
 
 from videos.models import Video
+from rooms.models import StreamSession
+
 
 #tmp
 def get_all_video_folders() -> list[str]:
@@ -19,16 +23,15 @@ def get_all_video_folders() -> list[str]:
         if os.path.isdir(os.path.join(hls_dir, d))
     ]
 
-def upload_form_view(request):
+# def upload_form_view(request):
 
-    videos = Video.objects.all()
-    context = {
-        'videos': videos
-    }
-    return render(request, 'video/upload.html', context)
+#     videos = Video.objects.all()
+#     context = {
+#         'videos': videos
+#     }
+#     return render(request, 'video/upload.html', context)
 
 def handle_upload_view(request):
-    """Réceptionne le fichier envoyé par le formulaire."""
 
     if request.method != 'POST':
         return HttpResponse("Méthode non autorisée.", status=405)
@@ -36,8 +39,10 @@ def handle_upload_view(request):
     video_file = cast(File, request.FILES.get('video_file'))
     
     if video_file:
-        video = save_uploaded_video(video_file)
 
+  
+        video = save_uploaded_video(video_file)
+        
         thread = threading.Thread(
             target=process_video_with_ffmpeg, 
             args=(video, video_file.name)
@@ -45,6 +50,6 @@ def handle_upload_view(request):
 
         thread.daemon = True
         thread.start()
-        return redirect('upload_page')
+        return redirect('create_room')
     
-    return redirect('upload_page')
+    return redirect('render_landing')
