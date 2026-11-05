@@ -1,6 +1,5 @@
+from django.conf import settings
 from django.db import models
-
-from users.models import User
 
 # Create your models here.
 class Video(models.Model):
@@ -12,7 +11,7 @@ class Video(models.Model):
         ERROR = 'Error'
 
     owner = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='videos'
     )

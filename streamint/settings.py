@@ -135,9 +135,3 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
-
-
-
-# Puisqu'on a créé notre propre User(AbstractBaseUser) dans models.py
-
-AUTH_USER_MODEL = 'users.User'
