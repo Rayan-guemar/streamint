@@ -20,8 +20,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import *
+from users.views import register
 
 urlpatterns = [
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/register/', register, name='register'),
     path('admin/', admin.site.urls),
     path('videos/', include('videos.urls')),
     path('', include('rooms.urls')),      
