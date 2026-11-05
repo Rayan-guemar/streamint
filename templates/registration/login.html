@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Streamint - Connexion</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    {% include "components/header.html" %}
+    <main>
+        <h1>Streamint</h1>
+
+        <section id="accueil">
+            <div class="introduction">
+                <p class="surtitre">Connexion</p>
+                <h2>Connexion à votre compte</h2>
+            </div>
+
+            <div class="cartes-accueil">
+                <article class="carte-accueil">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <p class="message-erreur">Identifiant ou mot de passe incorrect.</p>
+                        {% endif %}
+
+                        {{ form.as_p }}
+
+                        <button type="submit">Se connecter</button>
+                    </form>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
