@@ -1,12 +1,10 @@
+from django.conf import settings
 from django.db import models
-from users.models import User
 from videos.models import Video
-
-# Create your models here.
 
 class StreamSession(models.Model):
     host = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='hosted_streams'
     )
@@ -28,7 +26,7 @@ class StreamSession(models.Model):
 
 class StreamParticipant(models.Model):
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='stream_participations'
     )

@@ -6,7 +6,6 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.files import File
 
-from users.models import User
 from videos.models import Video
 from videos.services import process_video_with_ffmpeg, save_uploaded_video
 from .models import StreamSession

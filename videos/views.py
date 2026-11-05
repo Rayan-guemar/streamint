@@ -7,7 +7,6 @@ from django.shortcuts import render, redirect
 from django.core.files import File
 from typing import cast
 
-from users.models import User
 from videos.services import ensure_directory_exists, get_hls_dir, save_uploaded_video, process_video_with_ffmpeg
 
 from videos.models import Video

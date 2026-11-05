@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.files import File
 
 from videos.models import Video
-from users.models import User
+from django.conf import settings
 
 
 def get_hls_dir() -> str:
