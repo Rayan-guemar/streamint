@@ -1,11 +1,13 @@
 import os
 import threading
 import secrets
+from typing import cast
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.files import File
-from typing import cast
+from django.contrib.auth.decorators import login_required
+
 
 from videos.services import ensure_directory_exists, get_hls_dir, save_uploaded_video, process_video_with_ffmpeg
 
@@ -13,7 +15,9 @@ from videos.models import Video
 from rooms.models import StreamSession
 
 
+
 #tmp
+@login_required
 def get_all_video_folders() -> list[str]:
     hls_dir = get_hls_dir()
     ensure_directory_exists(hls_dir)
@@ -29,7 +33,7 @@ def get_all_video_folders() -> list[str]:
 #         'videos': videos
 #     }
 #     return render(request, 'video/upload.html', context)
-
+@login_required
 def handle_upload_view(request):
 
     if request.method != 'POST':

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Streamint - Inscription</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <main>
+        <h1>Streamint</h1>
+        <section id="accueil">
+            <div class="introduction">
+                <p class="surtitre">Inscription</p>
+                <h2>Créer un compte</h2>
+            </div>
+
+            <div class="cartes-accueil">
+                <article class="carte-accueil">
+                    {% if form.errors %}
+                    <div class="message-erreur">
+                        {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit">S'inscrire</button>
+                    </form>
+                    <p class="information">
+                        Déjà un compte ? <a href="{% url 'login' %}">Connectez-vous ici</a>.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

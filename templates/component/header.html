@@ -1,0 +1,18 @@
+<header class="entete-globale">
+    <div class="entete-conteneur">
+        <a href="/" class="entete-logo">Stream’int 🎬</a>
+
+        <nav class="entete-navigation">
+            {% if user.is_authenticated %}
+            <span class="utilisateur-nom">👤 <strong>{{ user.username }}</strong></span>
+            <form action="{% url 'logout' %}" method="POST" class="form-deconnexion">
+                {% csrf_token %}
+                <button type="submit" class="bouton-secondaire bouton-nav">Déconnexion</button>
+            </form>
+            {% else %}
+            <a href="{% url 'login' %}" class="lien-nav">Connexion</a>
+            <a href="{% url 'register' %}" class="bouton-nav-principal">Inscription</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

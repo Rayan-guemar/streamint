@@ -3,9 +3,9 @@ import subprocess
 
 from django.conf import settings
 from django.core.files import File
+from django.contrib.auth.models import User
 
 from videos.models import Video
-from django.conf import settings
 
 
 def get_hls_dir() -> str:
@@ -55,16 +55,12 @@ def execute_ffmpeg_command(command: list) -> None:
         )
 
 
-def save_uploaded_video(file: File) -> Video:
+def save_uploaded_video(file: File, owner: User) -> Video:
     name = file.name
     dir_path = get_original_dir()
     ensure_directory_exists(dir_path)
     file_path = get_original_path(name)
     write_file_chunks(file_path, file)
-    owner = User.objects.first()
-    if owner is None:
-        owner = User(username='test', email='test@gmail.com')
-        owner.save()
 
     new_video = Video(title=get_clean_name(name), status=Video.Status.UPLOADED)
    
