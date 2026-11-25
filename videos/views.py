@@ -1,32 +1,33 @@
 import os
-import threading
 import secrets
+import threading
 from typing import cast
 
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.core.files import File
 from django.contrib.auth.decorators import login_required
+from django.core.files import File
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 
-
-from videos.services import ensure_directory_exists, get_hls_dir, save_uploaded_video, process_video_with_ffmpeg
-
-from videos.models import Video
 from rooms.models import StreamSession
+from videos.models import Video
+from videos.services import (
+    ensure_directory_exists,
+    get_hls_dir,
+    process_video_with_ffmpeg,
+    save_uploaded_video,
+)
 
 
-
-#tmp
+# tmp
 @login_required
 def get_all_video_folders() -> list[str]:
     hls_dir = get_hls_dir()
     ensure_directory_exists(hls_dir)
-    return [
-        d for d in os.listdir(hls_dir) 
-        if os.path.isdir(os.path.join(hls_dir, d))
-    ]
+    return [d for d in os.listdir(hls_dir) if os.path.isdir(os.path.join(hls_dir, d))]
+
 
 # def upload_form_view(request):
+
 
 #     videos = Video.objects.all()
 #     context = {
@@ -36,23 +37,19 @@ def get_all_video_folders() -> list[str]:
 @login_required
 def handle_upload_view(request):
 
-    if request.method != 'POST':
+    if request.method != "POST":
         return HttpResponse("Méthode non autorisée.", status=405)
-    
-    video_file = cast(File, request.FILES.get('video_file'))
-    
+
+    video_file = cast(File, request.FILES.get("video_file"))
+
     if video_file:
 
-  
         video = save_uploaded_video(video_file)
-        
-        thread = threading.Thread(
-            target=process_video_with_ffmpeg, 
-            args=(video, video_file.name)
-        )
+
+        thread = threading.Thread(target=process_video_with_ffmpeg, args=(video, video_file.name))
 
         thread.daemon = True
         thread.start()
-        return redirect('create_room')
-    
-    return redirect('render_landing')
+        return redirect("create_room")
+
+    return redirect("render_landing")
