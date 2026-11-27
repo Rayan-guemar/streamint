@@ -13,11 +13,11 @@ from videos.services import ensure_directory_exists, get_hls_dir, save_uploaded_
 
 from videos.models import Video
 from rooms.models import StreamSession
+from videos.tasks import task_process_video
 
 
 
 #tmp
-@login_required
 def get_all_video_folders() -> list[str]:
     hls_dir = get_hls_dir()
     ensure_directory_exists(hls_dir)
@@ -44,15 +44,10 @@ def handle_upload_view(request):
     if video_file:
 
   
-        video = save_uploaded_video(video_file)
+        video = save_uploaded_video(video_file, request.user)
         
-        thread = threading.Thread(
-            target=process_video_with_ffmpeg, 
-            args=(video, video_file.name)
-        )
+        task_process_video.delay(video.pk, video_file.name)
 
-        thread.daemon = True
-        thread.start()
         return redirect('create_room')
     
     return redirect('render_landing')

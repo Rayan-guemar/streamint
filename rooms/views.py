@@ -9,7 +9,8 @@ from django.contrib.auth.decorators import login_required
 
 
 from videos.models import Video
-from videos.services import process_video_with_ffmpeg, save_uploaded_video
+from videos.services import save_uploaded_video
+from videos.tasks import task_process_video
 from .models import StreamSession
 from .services import create_session
 
@@ -46,13 +47,7 @@ def create_room(request):
 
         video = save_uploaded_video(video_file, user)
         
-        thread = threading.Thread(
-            target=process_video_with_ffmpeg, 
-            args=(video, video_file.name)
-        )
-
-        thread.daemon = True
-        thread.start()
+        task_process_video.delay(video.pk, video_file.name)
 
         session = create_session(video=video, host=user)
         return redirect('detail', session.code)
